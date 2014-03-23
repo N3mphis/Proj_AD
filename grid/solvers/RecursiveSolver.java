@@ -41,11 +41,16 @@ public class RecursiveSolver  extends Solver{
 			long sum =0;
 			for (Tilia tilia : x.cut(i)){
                 // TODO : Process smaller pieces
+				CuttingResult temp = getReward(tilia);
+				for(int j=0; j < temp.getPieces().size();j++)
+					pieces_tmp.add(temp.getPieces().get(j));
+				sum+=temp.getReward();
               
 			}
             // TODO: Select optimal result
             if (sum > best.getReward()){
-              
+              best.setPieces(pieces_tmp);
+              best.setReward(sum);
 			}
 		}
 		return best;

@@ -1,5 +1,6 @@
 package grid;
 import game.CreditChecker;
+
 import java.util.ArrayList;
 
 public class Tilia {
@@ -90,7 +91,6 @@ public class Tilia {
 		for(i=0;i<max/min;i++){
 			list.add(getCollection().getGrid(min));
 		}
-		
 		tiliaCalculator(max-i*min,min,list);
         
 	}

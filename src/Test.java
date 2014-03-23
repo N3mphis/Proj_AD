@@ -18,7 +18,7 @@ public class Test {
         // The simple solver will not give the optimal solution
         //testSolver(new SimpleSolver(),15,correct15());
 
-        //testSolver(new RecursiveSolver(),15,correct15());
+        testSolver(new RecursiveSolver(),15,correct15());
 
         //testSolver(new DynamicSolver(15),15,correct15());
     }
