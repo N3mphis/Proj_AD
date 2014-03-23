@@ -13,7 +13,7 @@ public class Test {
 
     // Uncomment the lines below to test your code for a few cases
     public static void main(String[] args){
-        //testCut();
+        testCut();
 
         // The simple solver will not give the optimal solution
         //testSolver(new SimpleSolver(),15,correct15());

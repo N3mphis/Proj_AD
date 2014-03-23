@@ -59,11 +59,11 @@ public class Tilia {
 		
 		else {
 			// TODO: Add the square that is cut out
-			tilias.add(this.getCollection().getGrid(tiliaSize));
+			tilias.add(getCollection().getGrid(tiliaSize));
 			
 
             // TODO: Process the leftover pieces using the gridCalculator function
-			tiliaCalculator(side-tiliaSize,side,tilias);
+			tiliaCalculator(side,side-tiliaSize,tilias);
 			tiliaCalculator(tiliaSize,side-tiliaSize,tilias);
 
 		}
@@ -84,14 +84,18 @@ public class Tilia {
 		}
 		if(min==1){
 			for(i=0;i<max;i++){
-				list.add(this.getCollection().getGrid(1));
+				list.add(getCollection().getGrid(1));
 			}
 			return;
 		}
-		for(i=0;i<max/min;i++){
-			list.add(this.getCollection().getGrid(min));
+		if(min==0){
+			return;
 		}
-		tiliaCalculator(max,min,list);
+		for(i=0;i<max/min;i++){
+			list.add(getCollection().getGrid(min));
+		}
+		
+		tiliaCalculator(max-i*min,min,list);
         
 	}
 	
