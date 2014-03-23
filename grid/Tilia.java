@@ -5,7 +5,7 @@ import game.CreditChecker;
 import java.util.ArrayList;
 
 
-
+//test
 public class Tilia {
 
 	private int side ; // Size of the tilia
@@ -59,11 +59,12 @@ public class Tilia {
 		
 		else {
 			// TODO: Add the square that is cut out
-
-
+			tilias.add(this.getCollection().getGrid(tiliaSize));
+			
 
             // TODO: Process the leftover pieces using the gridCalculator function
-
+			tiliaCalculator(side-tiliaSize,side,tilias);
+			tiliaCalculator(tiliaSize,side-tiliaSize,tilias);
 
 		}
 		
@@ -73,7 +74,24 @@ public class Tilia {
 
 	private void tiliaCalculator (int length,int width, ArrayList<Tilia> list){
         // TODO: Process a rectangle
-
+		int i,max,min;
+		if(length>=width){
+			max = length;
+			min = width;
+		}else{
+			max = width;
+			min = length;
+		}
+		if(min==1){
+			for(i=0;i<max;i++){
+				list.add(this.getCollection().getGrid(1));
+			}
+			return;
+		}
+		for(i=0;i<max/min;i++){
+			list.add(this.getCollection().getGrid(min));
+		}
+		tiliaCalculator(max,min,list);
         
 	}
 	
