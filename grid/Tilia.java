@@ -1,11 +1,7 @@
 package grid;
-
 import game.CreditChecker;
-
 import java.util.ArrayList;
 
-
-//test
 public class Tilia {
 
 	private int side ; // Size of the tilia
