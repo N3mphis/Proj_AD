@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 public class DynamicSolver extends Solver{
 
-	
+	HashMap<Integer, CuttingResult> tabel = new HashMap<Integer, CuttingResult>();
 	public  DynamicSolver (int size){
 	}
 		
@@ -32,38 +32,42 @@ public class DynamicSolver extends Solver{
 	public CuttingResult getReward(Tilia x){
 
 		int side = x.getSide();
-
+		
 		// TODO : Check if you have computed this before
-        
-
+        if(!tabel.containsKey(side)){
         ArrayList<Integer> pieces = new ArrayList<Integer>();
         pieces.add(side);
         CuttingResult best = new CuttingResult(side, 0, x.getReward(), pieces);
 
 		
-		long max = x.getReward();
+		long max = x.getReward(); //wordt niet gebruikt ?
 
-        long currentReward;
+        long currentReward;	//wordt niet gebruikt ?
 
 		for (int i =1 ; i < side ; i++){
 			
 			ArrayList<Integer> pieces_tmp = new ArrayList<Integer>();
-			long sum =0;
-			
+			long sum =0;		
 			for (Tilia tilia : x.cut(i)){
-				// TODO : Process smaller pieces
-
+                // TODO: Process smaller pieces
+				CuttingResult temp = getReward(tilia);
+				for(int j=0; j < temp.getPieces().size();j++)
+					pieces_tmp.add(temp.getPieces().get(j));
+				sum+=temp.getReward();
+              
 			}
-			// TODO: Select optimal result
-			if (sum > best.getReward()){
-			
-				
+            // TODO: Select optimal result
+            if (sum > best.getReward()){
+              best.setPieces(pieces_tmp);
+              best.setReward(sum);
 			}
 		}
 
 		// TODO: Save optimal result
-
+		tabel.put(side, best);
 		return best;
+	}
+        else return tabel.get(side);
 	}
 		
 

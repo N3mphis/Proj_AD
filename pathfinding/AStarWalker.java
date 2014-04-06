@@ -46,11 +46,35 @@ public class AStarWalker extends Agent {
 
 	
 	public LinkedList<Integer> getAStarPath(int start, int goal){
-      
 		// TODO: add A*
-		return null;
-    }
+		int current = start;
+		LinkedList<Integer> moves = new LinkedList<Integer>();
+		LinkedList<Integer> openList = new LinkedList<Integer>();
+		
+		LinkedList<Integer> closedList = new LinkedList<Integer>();
+		int xStartLocation = logic.calcXFromCoor(start);
+		int yStartLocation = logic.calcYFromCoor(start);
 
+		int xGoalLocation = logic.calcXFromCoor(goal);
+		int yGoalLocation = logic.calcYFromCoor(goal);
+		openList.add(start);
+		// minimum vinden
+		boolean found_min = false;
+		while(!found_min){
+			
+		}
+		
+		
+			int newSpot = logic.returnCoorFromXY(0, 0);
+			Tile tile = this.getTile(newSpot);
+			String tileType = tile.getIdentifier();
+			if (tileType.equals(Tile.ROCK_TILE) ||
+				(this.red && tileType.equals(Tile.BLUE_CAMP_TILE)) ||
+				(!this.red && tileType.equals(Tile.RED_CAMP_TILE))){
+
+			}
+		return moves;
+    }
 
     public boolean canAccess(int position, int goal){
         
