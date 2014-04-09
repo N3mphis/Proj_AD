@@ -32,7 +32,7 @@ public class GUIMain {
 			//
 			// You can increase the speed variable or iterations variable if you want
 			
-			
+					
 			System.out.println("Starting scenario 1: ");
 			final String map = "simple_map.txt";
 			double speed = 0.1;
@@ -46,7 +46,7 @@ public class GUIMain {
 			
 			// end scenario 1
 			
-
+			 
 			// Scenario 2: That's not fair
 			// uncomment the following code.
 			// use recursive solvers for both teams
@@ -58,11 +58,11 @@ public class GUIMain {
 			// --  Briefly describe what you did and how it effects the game outcome.
 			//
 			// You can increase the speed variable 
-			
 			/*
+			
 			System.out.println("Starting scenario 2: ");
 			final String map = "not_fair.txt";
-			double speed = 0.1;
+			double speed = 0.001;
 			int pathCredits= 40; // do not change
 			int calcCredits =30; // do not change
 			GameLogic.AGENT_STRATEGY bluePathStrategy = GameLogic.AGENT_STRATEGY.ASTARWALKER; // do not change
@@ -72,8 +72,8 @@ public class GUIMain {
 			
 			int iterations = 1300; // do not change
 			// end scenario 2
+			 
 			*/
-
 			
 			
 			// Scenario 3: Processing problems
@@ -87,9 +87,8 @@ public class GUIMain {
 			// --  Briefly describe what you did and how it effects the game outcome.
 			//
 			// You can increase the speed variable 
-			
 			/*
-			
+		
 			System.out.println("Starting scenario 3: ");
 			final String map = "process_problems.txt";
 			double speed = 0.01;
@@ -101,12 +100,12 @@ public class GUIMain {
 			int iterations = 1200; // do not change
 			
 			// change this 
-			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER; // do not change
+			//GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER; // do not change
 			//GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.ADVANCED_SOLVER; // do not change
-
+			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.GREEDY_SOLVER;
 			// end scenario 3
 			
-			*/
+		*/
 			
 			
 			// Scenario 4  : entrances  (If you implemented hierarchical version)
@@ -128,7 +127,7 @@ public class GUIMain {
 			
 			System.out.println("Starting scenario 4: ");
 			final String map = "entrance.txt";
-			double speed = 0.01;
+			double speed = 0.001;
 			int pathCredits= 10; // do not change
 			int calcCredits =2000; // do not change
 			GameLogic.AGENT_STRATEGY bluePathStrategy = GameLogic.AGENT_STRATEGY.ASTARWALKER; // do not change

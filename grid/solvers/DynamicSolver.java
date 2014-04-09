@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 public class DynamicSolver extends Solver{
 
-	HashMap<Integer, CuttingResult> tabel = new HashMap<Integer, CuttingResult>();
+	private static HashMap<Integer, CuttingResult> tabel = new HashMap<Integer, CuttingResult>();
 	public  DynamicSolver (int size){
 	}
 		

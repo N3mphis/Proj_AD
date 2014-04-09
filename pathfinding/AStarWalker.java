@@ -13,8 +13,6 @@ public class AStarWalker extends Agent {
 
 	private CreditChecker checker ;
 	private int initialCredits ;
-
-
 	public AStarWalker(String id, boolean red, GameLogic logic, int initialCredits){
 		this.id = id;
 		this.red = red;
@@ -43,12 +41,14 @@ public class AStarWalker extends Agent {
 		
 		
 	}
+
 	// hulpfunctie om A* te implementeren
 	private int get_h(int current, int goal){
 		int current_x = logic.calcXFromCoor(current);
 		int current_y = logic.calcYFromCoor(current);
 		int goal_x = logic.calcXFromCoor(goal);
 		int goal_y = logic.calcYFromCoor(goal);
+		//return (int)Math.sqrt((current_x - goal_x)*(current_x - goal_x)+ (current_y - goal_y)*(current_y - goal_y));
 		return Math.abs(current_x - goal_x)+ Math.abs(current_y - goal_y);
 	}
 	

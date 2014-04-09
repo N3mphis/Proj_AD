@@ -1,5 +1,6 @@
 package grid;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -26,6 +27,7 @@ public class TiliaCollection {
             tilias.put(i, tilia);
         }
 	}
+	
 
     public TiliaCollection (int top, int seed){
         tilias = new HashMap<Integer,Tilia>();
@@ -101,4 +103,17 @@ public class TiliaCollection {
 		}
 		return ret;
 	}
+	
+	//view tillias(zelf toegevoegd)
+	public ArrayList<Float> get_tilias(){
+		ArrayList<Float> result = new ArrayList<Float>();
+        for (int i = 0 ; i < tilias.size() ; i ++){
+        	 if(tilias.get(i).getSide()!=0){
+            float f = (float) tilias.get(i).getReward()/(tilias.get(i).getSide()*tilias.get(i).getSide());
+        		 result.add(f);
+           }
+        }
+        return result;
+	}
+
 }

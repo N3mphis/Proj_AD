@@ -3,6 +3,7 @@ package game;
 import grid.Tilia;
 import grid.TiliaCollection;
 import grid.solvers.DynamicSolver;
+import grid.solvers.GreedySolver;
 import grid.solvers.RecursiveSolver;
 import grid.solvers.SimpleSolver;
 import grid.solvers.Solver;
@@ -44,6 +45,10 @@ public class GameLogic{
 	private  int pathCredits ; // credits each iteration for each character to calc path
 	private  int calcCredits ; // credits each iteration for each team to process
 	private HashMap<Integer, Integer> coinLocations; // locations of the coins
+	//team specific variables
+	private MinHeap<Coin> coins_red;
+	private MinHeap<Coin> coins_blue;
+	
 	private ArrayList<Agent> blueTeam = new ArrayList<Agent>(); // characters in blue team
 	private ArrayList<Agent> redTeam = new ArrayList<Agent>(); // characters in red team
 	private ArrayList<Agent> allSprites = new ArrayList<Agent>(); // all characters
@@ -114,6 +119,8 @@ public class GameLogic{
 
 		this.processingBlue = -1;
 		this.processingRed = -1;
+		
+		initialize_coins();
 
 	}
 	
@@ -328,9 +335,76 @@ public class GameLogic{
 
 	}
 	
-	private void advancedStrategy(Agent a){
+	private int pickClosest(Agent a,ArrayList<Integer> coins){
+		int min=Integer.MAX_VALUE;
+		int distance;
+		int position=0;
+		for(int i = 0;i<coins.size();i++){
+			int x = (calcXFromCoor(coins.get(i))-calcXFromCoor(a.getCampLocation()));
+			int y = (calcYFromCoor(coins.get(i))-calcYFromCoor(a.getCampLocation()));
+			distance =(int)Math.sqrt((x)*(x) + (y)*(y));
+			if(distance<min){
+				min=distance;
+				position = i;
+			}
+		}
+		return position;
 		
-		// complete code
+	}
+	
+	private int getDistance(int coin,boolean red){
+		int x= 0;
+		int y= 0;
+		if(red){
+			x = (calcXFromCoor(coin)-calcXFromCoor(redCamp));
+			y = (calcYFromCoor(coin)-calcYFromCoor(redCamp));
+		}else{
+			x = (calcXFromCoor(coin)-calcXFromCoor(blueCamp));
+			y = (calcYFromCoor(coin)-calcYFromCoor(blueCamp));
+		}
+			return (int)Math.sqrt((x)*(x) + (y)*(y));
+		
+	}
+	
+	private void initialize_coins(){
+			ArrayList<Integer> coins = new ArrayList<Integer>(coinLocations.keySet());
+			coins_red = new MinHeap<Coin>();
+			coins_blue = new MinHeap<Coin>();
+			for(Integer coin: coins){
+				Coin red = new Coin(getDistance(coin,true),coin);
+				Coin blue = new Coin(getDistance(coin,false),coin);
+				coins_red.add(red);
+				coins_blue.add(blue);
+				
+			}
+	
+	}
+	
+	private void advancedStrategy(Agent a){//afstand wordt bevoordeeld tov padlengte omwille van complexiteit
+		
+		if (a.getCarrying() > -1) {
+			a.calcPath(calcXFromCoor(a.getCampLocation()),calcYFromCoor(a.getCampLocation())); // if carrying a Tilia, go to camp
+		} else { // go pick up a tilia closest to position
+			int coin = 0;
+			if(a.isRed()){
+				if (coins_red.size() >= 1){
+					coin = coins_red.extractMin().getlocation();
+				}
+				
+			}else{
+				if (coins_blue.size() >= 1){
+					coin = coins_blue.extractMin().getlocation();
+				}
+				
+			}
+			if(coin==0){
+				coin = a.getCampLocation();
+			}
+			a.calcPath(calcXFromCoor(coin), calcYFromCoor(coin));
+		}	
+		
+		
+		
 	}
 	
 
@@ -348,8 +422,8 @@ public class GameLogic{
 					
 					// replace simpleAStarStrategy with advancedStrategy 
 					// 
-					simpleAStarStrategy(a);
-					// advancedStrategy(a);
+					//simpleAStarStrategy(a);
+					 advancedStrategy(a);
 					
 				}else if(blueTeamPathStrategy.equals((AGENT_STRATEGY.RANDOM_WALKER))){
 					
@@ -386,9 +460,12 @@ public class GameLogic{
 		}
 		else if (this.blueProcStrategy.equals(GameLogic.PROCESSING_STRATEGY.SIMPLE_SOLVER)){
 			solver = new SimpleSolver();
+		}else if (this.blueProcStrategy.equals(GameLogic.PROCESSING_STRATEGY.GREEDY_SOLVER)){
+			// add here
+			solver = new GreedySolver();
 		}else if (this.blueProcStrategy.equals(GameLogic.PROCESSING_STRATEGY.ADVANCED_SOLVER)){
 			// add here
-			solver = null;
+			solver =null;
 		}
 		// ADD other options here
 		else{

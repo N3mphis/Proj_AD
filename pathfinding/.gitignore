@@ -1,3 +1,5 @@
 /AStarWalker.class
 /Agent.class
 /RandomWalker.class
+/MinHeap.class
+/HeapUnderflowException.class
