@@ -408,22 +408,6 @@ public class GameLogic {
 
 	}
 
-	private int pickClosest(Agent a, ArrayList<Integer> coins) {
-		int min = Integer.MAX_VALUE;
-		int distance;
-		int position = 0;
-		for (int i = 0; i < coins.size(); i++) {
-			int x = (calcXFromCoor(coins.get(i)) - calcXFromCoor(a.getCampLocation()));
-			int y = (calcYFromCoor(coins.get(i)) - calcYFromCoor(a.getCampLocation()));
-			distance = (int) Math.sqrt((x) * (x) + (y) * (y));
-			if (distance < min) {
-				min = distance;
-				position = i;
-			}
-		}
-		return position;
-
-	}
 
 	private int getDistance(int coin, boolean red) {
 		int x = 0;
@@ -492,8 +476,6 @@ public class GameLogic {
 		// clusters zijn genummerd van links naar rechts en boven naar onder (=>
 		// eerst op 1 lijn)
 		// de openingen worden wel bepaald door het programma
-		int height = squaresY;
-		int width = squaresX;
 		int clusterHeight = 10;
 		int clusterWidth = 15;
 		int coordinate;
@@ -1476,7 +1458,7 @@ public class GameLogic {
 
 					// replace simpleAStarStrategy with advancedStrategy
 					//
-					// simpleAStarStrategy(a);
+					 //simpleAStarStrategy(a);
 					advancedStrategy(a);
 
 				} else if (blueTeamPathStrategy.equals((AGENT_STRATEGY.RANDOM_WALKER))) {

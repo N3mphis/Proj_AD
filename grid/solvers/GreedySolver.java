@@ -6,60 +6,49 @@ import grid.Tilia;
 import java.util.ArrayList;
 
 public class GreedySolver extends Solver{
-	static ArrayList<Float> quality;
+	private static ArrayList<Float> quality;
 	public  GreedySolver (){
 	}
 		
 		
 	public CuttingResult getReward(Tilia x){
-		if(GreedySolver.quality==null){GreedySolver.quality = x.getCollection().get_tilias();};
+		if(quality == null){
+		quality = x.getCollection().get_tilias();
+		}	
 		int side = x.getSide();
-
         ArrayList<Integer> pieces = new ArrayList<Integer>();
-        pieces.add(side);
       
-		float fmax=(float) 0.0;
 		long sum=0;
+		float maxratio= 0;
 		int bestside = 0;
-
-		for(int i = 0;i<side;i++){
-			if(GreedySolver.quality.get(i)>fmax){
-				fmax = GreedySolver.quality.get(i);
+		//Determine side with best ratio
+		for(int i = 0;i<=side&&i<quality.size();i++){
+			if(quality.get(i)>maxratio){
+				maxratio = quality.get(i);
 				bestside=i;
 			}
 		}
-		ArrayList<Tilia> temp = new ArrayList<Tilia>();
-		temp.add(x);
-		boolean cont = true;
-		while(cont){
-			cont=false;
-		for(Tilia cut : temp){
-			if(cut.getSide()>bestside){
-				cont=true;
-			}
+		int amountbest = (side/bestside)*(side/bestside);
+		for(int i = 0;i<amountbest;i++){
+			pieces.add(bestside);			
 		}
-		cuttingPossible(bestside,temp);
-		}
-		for(Tilia tilia:temp){
+		 ArrayList<Tilia> cuts = new ArrayList<Tilia>();
+		 if(bestside*(side/bestside)>=side){
+			 			 
+		 }else{
+		 cuts=x.cut(bestside*(side/bestside));
+		 cuts.remove(0); //eerste is groot blok
+		for(Tilia tilia:cuts){
 			sum+=tilia.getReward();
 			pieces.add(tilia.getSide());	
 		}
+	}
+		sum+=(long)(quality.get(bestside)*(bestside*bestside*amountbest));
 		CuttingResult best = new CuttingResult(side, 0, sum, pieces);
 		return best;
 
 		
 	}
-private void cuttingPossible(int bestside,ArrayList<Tilia> temp){
-	int size = temp.size();
-	for(int i=0;i<size;i++){
-		if(temp.get(i).getSide()>bestside){
-			for(Tilia cut : temp.get(i).cut(bestside)){
-				temp.add(cut);
-			}
-			temp.remove(i);
-		}
-	}
-}	
 	
 
 		

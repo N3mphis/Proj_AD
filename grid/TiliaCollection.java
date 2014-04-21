@@ -104,14 +104,13 @@ public class TiliaCollection {
 		return ret;
 	}
 	
-	//view tillias(zelf toegevoegd)
+	//get tillias(zelf toegevoegd), ratios beginnen vanaf size = 1
 	public ArrayList<Float> get_tilias(){
 		ArrayList<Float> result = new ArrayList<Float>();
-        for (int i = 0 ; i < tilias.size() ; i ++){
-        	 if(tilias.get(i).getSide()!=0){
+		result.add((float)0);
+        for (int i = 1 ; i < tilias.size() ; i ++){
             float f = (float) tilias.get(i).getReward()/(tilias.get(i).getSide()*tilias.get(i).getSide());
         		 result.add(f);
-           }
         }
         return result;
 	}

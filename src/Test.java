@@ -13,14 +13,30 @@ public class Test {
 
     // Uncomment the lines below to test your code for a few cases
     public static void main(String[] args){
-        testCut();
+        //testCut();
 
         // The simple solver will not give the optimal solution
-        testSolver(new SimpleSolver(),15,correct15());
 
-        testSolver(new RecursiveSolver(),15,correct15());
+    	//testSolver(new SimpleSolver(),15,correct15());
 
-        testSolver(new DynamicSolver(15),15,correct15());
+    	// testSolver(new RecursiveSolver(),15,correct15());	
+    
+     	//testSolver(new DynamicSolver(15),15,correct15());
+    	
+    	//testSolver(new GreedySolver(),15,correct15());
+    	long startTime,stopTime,elapsedTime,average;
+        for(int i = 10;i<50;i++){
+   	   	
+   	   		  elapsedTime=0;
+   	   		  startTime = System.currentTimeMillis();
+   	   		  testTimeSolver(new GreedySolver(),i);
+   	   		 stopTime = System.currentTimeMillis();
+   	      elapsedTime = stopTime - startTime;
+   	   System.out.println("Test " + i + " in time: " + elapsedTime);
+        
+        }
+
+
     }
 
     public static void testCut(){
@@ -46,7 +62,7 @@ public class Test {
                 //System.out.println("correct.put("+count+",new HashMap<Tilia, Integer>());");
                 for (Tilia x: map.keySet()){
                     isCorrectSolution =  isCorrectSolution && (correct.get(count).get(x) == map.get(x));
-                    //System.out.println("correct.get("+count+").put(collection.getGrid("+x.getSide()+"),"+map.get(x)+");");
+                   // System.out.println("correct.get("+count+").put(collection.getGrid("+x.getSide()+"),"+map.get(x)+");");
                 }
                 count++;
             }
@@ -54,6 +70,17 @@ public class Test {
         System.out.println("Correct cuts for these cases? "+isCorrectSolution);
     }
 
+    public static void testTimeSolver(Solver solver, int max){
+        TiliaCollection collection = new TiliaCollection(max,42);
+      
+
+        for(int i = 1; i <= max; i++){
+            Tilia test = collection.getGrid(i);
+            CuttingResult solution = solver.getReward(test);
+        }
+          
+    }
+    
     public static void testSolver(Solver solver, int max, HashMap<Integer, HashMap<Integer,Integer>> correct){
         TiliaCollection collection = new TiliaCollection(max,42);
         boolean isCorrectSolution = true;
@@ -61,7 +88,10 @@ public class Test {
         for(int i = 1; i <= max; i++){
             Tilia test = collection.getGrid(i);
             CuttingResult solution = solver.getReward(test);
+        
+          
             HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
+       
             for (int x: solution.getPieces()){
                 if (map.containsKey(x)){
                     map.put(x, map.get(x)+1);
@@ -70,12 +100,13 @@ public class Test {
                 }
             }
             //System.out.println("correct.put("+i+",new HashMap<Integer, Integer>());");
-            for (int x: map.keySet()){
+           for (int x: map.keySet()){
                 isCorrectSolution =  isCorrectSolution && (correct.get(i).get(x) == map.get(x));
                 //System.out.println("correct.get("+i+").put("+x+","+map.get(x)+");");
             }
         }
         System.out.println("Correct solver for these cases? "+isCorrectSolution);
+    
     }
 
     private static HashMap<Integer, HashMap<Tilia,Integer>> correctCut(TiliaCollection collection){

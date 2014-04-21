@@ -63,7 +63,7 @@ public class AStarWalker extends Agent {
 		MinHeap openList = new MinHeap(max_tile); // in deze lijst plaatsen we de tegels die we mogelijks willen bekijken
 		//ArrayList<Values> closedList = new ArrayList<Values>(); // hier komen de tegels die reeds werden bekeken
 		Values start_val= new Values(start, 0, get_h(start, goal));
-		int mark[] = new int[max_tile]; // hier markeren we of tegels al eens bezocht werden of niet
+		boolean mark[] = new boolean[max_tile]; // hier markeren we of tegels al eens bezocht werden of niet
 		boolean in_closed [] = new boolean[max_tile];
 		int f_array [] = new int[max_tile];
 		
@@ -87,8 +87,7 @@ public class AStarWalker extends Agent {
 		int reworkcounter =0; //debug waarde
 		while(keep_looking){
 		counter++;
-		Values tmp_min = openList.min();// minimum ophalen
-		openList.extractMin(); // tegel verwijderen uit de openlist
+		Values tmp_min = openList.extractMin();// minimum ophalen en tegel verwijderen uit de openlist
 		in_closed[tmp_min.tilenum]= true;
 		f_array[tmp_min.tilenum]= tmp_min.f_val;
 		int min_pos = tmp_min.tilenum;
@@ -114,7 +113,7 @@ public class AStarWalker extends Agent {
 		}
 		else { // toevoegen van de tegel aan de openList als dit moet
 			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
+			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
 				if(openList.find_index.containsKey(newtile)){
 					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
 						reworkcounter++;
@@ -132,7 +131,7 @@ public class AStarWalker extends Agent {
 			}
 			else{
 			openList.add(bundle);
-			mark[newtile]=1; // de tegel markeren
+			mark[newtile]=true; // de tegel markeren
 			}
 		}
 		if(h_val==0){
@@ -157,7 +156,7 @@ public class AStarWalker extends Agent {
 		}
 		else { // toevoegen van de tegel aan de openList als dit moet
 			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
+			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
 				if(openList.find_index.containsKey(newtile)){
 					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
 						reworkcounter++;
@@ -175,7 +174,7 @@ public class AStarWalker extends Agent {
 			}
 			else{
 			openList.add(bundle);
-			mark[newtile]=1; // de tegel markeren
+			mark[newtile]=true; // de tegel markeren
 			}
 		}
 		if(h_val==0){
@@ -200,7 +199,7 @@ public class AStarWalker extends Agent {
 		}
 		else { // toevoegen van de tegel aan de openList als dit moet
 			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
+			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
 				if(openList.find_index.containsKey(newtile)){
 					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
 						reworkcounter++;
@@ -218,7 +217,7 @@ public class AStarWalker extends Agent {
 			}
 			else{
 			openList.add(bundle);
-			mark[newtile]=1; // de tegel markeren
+			mark[newtile]=true; // de tegel markeren
 			}
 		}
 		if(h_val==0){
@@ -243,7 +242,7 @@ public class AStarWalker extends Agent {
 		}
 		else { // toevoegen van de tegel aan de openList als dit moet
 			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
+			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
 				if(openList.find_index.containsKey(newtile)){
 					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
 						reworkcounter++;
@@ -261,7 +260,7 @@ public class AStarWalker extends Agent {
 			}
 			else{
 			openList.add(bundle);
-			mark[newtile]=1; // de tegel markeren
+			mark[newtile]=true; // de tegel markeren
 			}
 		}
 		if(h_val==0){
@@ -289,13 +288,9 @@ public class AStarWalker extends Agent {
     }
 
     public boolean canAccess(int position, int goal){
-        
-        
         String tileType = (this.getTile(position)).getIdentifier();
-        
-        
-        
-        boolean notAccessible = tileType.equals(Tile.ROCK_TILE) ||
+    
+       boolean notAccessible = tileType.equals(Tile.ROCK_TILE) ||
                 (this.red && tileType.equals(Tile.BLUE_CAMP_TILE)) ||
                 (!this.red && tileType.equals(Tile.RED_CAMP_TILE)) || (tileType.equals(Tile.BLUE_CAMP_TILE) && position != goal) ||
                 (tileType.equals(Tile.RED_CAMP_TILE) && position != goal);

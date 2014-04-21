@@ -27,27 +27,29 @@ public class RecursiveSolver  extends Solver{
 	public RecursiveSolver (){}
 
 	public CuttingResult getReward(Tilia x){
-		int side = x.getSide();
 
         ArrayList<Integer> pieces = new ArrayList<Integer>();
-        pieces.add(side);
-        CuttingResult best = new CuttingResult(side, 0, x.getReward(), pieces);
+        pieces.add(x.getSide());
+        // First two variables in CuttingResult are not used
+        CuttingResult best = new CuttingResult(0, 0, x.getReward(), pieces);
 
-		long currentReward;
 
 		// Try possible cuts
-		for (int i =1 ; i < side ; i++){
+		for (int i =1 ; i < x.getSide() ; i++){
 			ArrayList<Integer> pieces_tmp = new ArrayList<Integer>();
 			long sum =0;
+			//Try different cuts
 			for (Tilia tilia : x.cut(i)){
-                // TODO : Process smaller pieces
+                //Process smaller pieces
 				CuttingResult temp = getReward(tilia);
-				for(int j=0; j < temp.getPieces().size();j++)
+				for(int j=0; j < temp.getPieces().size();j++){
 					pieces_tmp.add(temp.getPieces().get(j));
-				sum+=temp.getReward();
+				}
+					sum+=temp.getReward();
+				
               
 			}
-            // TODO: Select optimal result
+            //Select optimal result
             if (sum > best.getReward()){
               best.setPieces(pieces_tmp);
               best.setReward(sum);

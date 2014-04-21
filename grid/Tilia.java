@@ -55,11 +55,9 @@ public class Tilia {
 		}
 		
 		else {
-			// TODO: Add the square that is cut out
+			//Add the square that is cut out
 			tilias.add(getCollection().getGrid(tiliaSize));
-			
-
-            // TODO: Process the leftover pieces using the gridCalculator function
+            //Process the leftover pieces using the gridCalculator function
 			tiliaCalculator(side,side-tiliaSize,tilias);
 			tiliaCalculator(tiliaSize,side-tiliaSize,tilias);
 
@@ -70,7 +68,7 @@ public class Tilia {
 	
 
 	private void tiliaCalculator (int length,int width, ArrayList<Tilia> list){
-        // TODO: Process a rectangle
+        //Process a rectangle
 		int i,max,min;
 		if(length>=width){
 			max = length;
@@ -79,20 +77,13 @@ public class Tilia {
 			max = width;
 			min = length;
 		}
-		if(min==1){
-			for(i=0;i<max;i++){
-				list.add(getCollection().getGrid(1));
-			}
-			return;
-		}
 		if(min==0){
 			return;
 		}
 		for(i=0;i<max/min;i++){
 			list.add(getCollection().getGrid(min));
 		}
-		tiliaCalculator(max-i*min,min,list);
-        
+		tiliaCalculator(max-i*min,min,list);  
 	}
 	
 	public int getSide() {
