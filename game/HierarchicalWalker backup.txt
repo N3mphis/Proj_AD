@@ -1,0 +1,93 @@
+//		ArrayList<Node> visitedNodes = new ArrayList<Node>();
+//		ArrayList<Node> avoidNodes = new ArrayList<Node>();
+//		visitedNodes.add(start);
+//		Node next = start;
+//		Node tmp_node = next;
+//		Node current = next; //the node we are examining
+//		int avoid_cluster = -1; // sometimes we want to avoid a certain cluster
+//		Node prev_node = start; // we want to keep track of the node we came from, so we don't end up in an endless loop
+//		Node swapper; // a temporary value to be able to swap 2 nodes
+//		
+//		int debugcounter=0;
+//		while(next.cluster1!=j && next.cluster2!=j){ // stop when arrived at the correct cluster
+//			
+//		min = 8192;
+//		if(next.cluster1 != avoid_cluster){
+//		for(int k = 0; k < logic.allNodes.get(next.cluster1 - 1).size();k++){
+//			current = logic.allNodes.get(next.cluster1 - 1).get(k);
+//			if((!avoidNodes.contains(current))&& (current.tilenum != prev_node.tilenum )&& (current.tilenum != next.tilenum )&& ((get_distance(goal, current.tilenum)< min)||(current.cluster1==j)||(current.cluster2==j))){
+//				if(current.cluster1==j||current.cluster2==j){
+//					if(tmp_node.cluster1!=j && tmp_node.cluster2!=j){
+//						min = get_distance(goal,current.tilenum);
+//						tmp_node = current;
+//					}
+//					else if(get_distance(goal, current.tilenum)<get_distance(goal, tmp_node.tilenum)){
+//						min = get_distance(goal,current.tilenum);
+//						tmp_node = current;
+//					}
+//				}
+//				else if((tmp_node.cluster1==j||tmp_node.cluster2==j)){} //do nothing
+//				else{
+//					min = get_distance(goal, current.tilenum);
+//					tmp_node = current;
+//				}
+//			}
+//		}
+//		}
+//		if(next.cluster2 != avoid_cluster){
+//		for(int k = 0; k < logic.allNodes.get(next.cluster2 - 1).size();k++){
+//			current = logic.allNodes.get(next.cluster2 - 1).get(k);
+//			//if((current.tilenum != prev_node.tilenum )&& (current.tilenum != next.tilenum )&& ((get_distance(goal, current.tilenum)< min)||(current.cluster1==j)||(current.cluster2==j))){
+//			if((!avoidNodes.contains(current))&& (current.tilenum != prev_node.tilenum )&& (current.tilenum != next.tilenum )&& ((get_distance(goal, current.tilenum)< min)||(current.cluster1==j)||(current.cluster2==j))){
+//				if(current.cluster1==j||current.cluster2==j){
+//					if((tmp_node.cluster1!=j&&tmp_node.cluster2!=j)){
+//						min = get_distance(goal,current.tilenum);
+//						tmp_node = current;
+//					}
+//					else if(get_distance(goal, current.tilenum)<get_distance(goal, tmp_node.tilenum)){
+//						min = get_distance(goal,current.tilenum);
+//						tmp_node = current;
+//					}
+//				}
+//				else if((tmp_node.cluster1==j||tmp_node.cluster2==j)){} //do nothing
+//				else{
+//					min = get_distance(goal,current.tilenum);
+//					tmp_node = current;
+//				}
+//			}
+//		}
+//		}
+//		if(tmp_node.tilenum==next.tilenum){
+//			System.out.println("ERROR\nERROR\nERROR");
+//			tmp = getAStarPath (next.tilenum, goal);
+//			break;
+//		}
+		
+		//tmp = getAStarPath (next.tilenum, tmp_node.tilenum);
+		
+		// we check if we haven't recently been to this node, so we don't get stuck in a loop
+//		if(visitedNodes.contains(tmp_node)){
+//			for(int k = visitedNodes.lastIndexOf(tmp_node); k< visitedNodes.size();k++){
+//				avoidNodes.add(visitedNodes.get(visitedNodes.size()-1));
+//				visitedNodes.remove(visitedNodes.size()-1);
+//			}
+//			avoidNodes.remove(avoidNodes.get(avoidNodes.size()-1));
+////			if(next.cluster1 == tmp_node.cluster1 || next.cluster1 == tmp_node.cluster2) avoid_cluster = next.cluster1;
+////			else if (next.cluster2 == tmp_node.cluster1 || next.cluster2 == tmp_node.cluster2) avoid_cluster = next.cluster2;
+////			else System.out.println("ERROR\nERROR\nERROR");
+//		}
+//		
+//		for(int k=0; k<logic.walls.get(tmp_node.cluster1-1).blockedClusters.size();k++){
+//			if(logic.walls.get(tmp_node.cluster1-1).blockedClusters.get(k) == j)avoid_cluster = tmp_node.cluster1;
+//		}
+//		
+//		for(int k=0; k<logic.walls.get(tmp_node.cluster2-1).blockedClusters.size();k++){
+//			if(logic.walls.get(tmp_node.cluster2-1).blockedClusters.get(k) == j)avoid_cluster = tmp_node.cluster2;
+//		}
+//		
+//		visitedNodes.add(tmp_node);
+//		
+//		//ret.addAll(tmp);
+//		swapper = next;
+//		next = tmp_node;
+//		prev_node = swapper;

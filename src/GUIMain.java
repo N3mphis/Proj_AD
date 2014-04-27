@@ -134,7 +134,7 @@ public class GUIMain {
 			GameLogic.PROCESSING_STRATEGY redProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER;// do not change
 			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER; // do not change
 
-			int iterations = 1500; 
+			int iterations = 8000; 
 			// end scenario 4
 			*/
 			

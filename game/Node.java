@@ -1,6 +1,4 @@
 package game;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class Node {
 	public int cluster1;
@@ -11,5 +9,10 @@ public class Node {
 		this.cluster1 = cluster1;
 		this.cluster2 = cluster2;
 		this.tilenum = tilenum;
+	}
+	
+	public boolean equals (Object o){
+		if(o instanceof Node) return ((Node)o).tilenum == this.tilenum;
+		else return false;
 	}
 }

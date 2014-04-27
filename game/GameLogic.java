@@ -25,6 +25,7 @@ import pathfinding.Agent;
 import pathfinding.RandomWalker;
 import pathfinding.HierarchicalWalker;
 import game.Node;
+import game.Wall;
 
 public class GameLogic {
 
@@ -134,6 +135,7 @@ public class GameLogic {
 	public ArrayList<Node> cluster19Nodes;
 	public ArrayList<Node> cluster20Nodes;
 	public ArrayList<ArrayList<Node>> allNodes;
+	public ArrayList<Wall> walls;
 
 	public GameLogic(int totalSteps, int pathCredits, int calcCredits, TiliaCollection collectionBlue, TiliaCollection collectionRed, GUI gui, String map, double speed, GameLogic.AGENT_STRATEGY blueTeamPathStrategy,
 			GameLogic.AGENT_STRATEGY redTeamPathStrategy, GameLogic.PROCESSING_STRATEGY blueProcStrategy, GameLogic.PROCESSING_STRATEGY redProcStrategy) {
@@ -197,6 +199,7 @@ public class GameLogic {
 		cluster19Nodes = new ArrayList<Node>(); 
 		cluster20Nodes = new ArrayList<Node>(); 
 		allNodes = new ArrayList<ArrayList<Node>>();
+		walls = new ArrayList<Wall>();
 
 	}
 
@@ -437,19 +440,12 @@ public class GameLogic {
 
 	}
 
-	private void advancedStrategy(Agent a) {// afstand wordt bevoordeeld tov
-											// padlengte omwille van
-											// complexiteit
+	private void advancedStrategy(Agent a) {// afstand wordt bevoordeeld tov padlengte omwille van complexiteit
 
 		if (a.getCarrying() > -1) {
-			a.calcPath(calcXFromCoor(a.getCampLocation()), calcYFromCoor(a.getCampLocation())); // if
-																								// carrying
-																								// a
-																								// Tilia,
-																								// go
-																								// to
-																								// camp
-		} else { // go pick up a tilia closest to position
+			a.calcPath(calcXFromCoor(a.getCampLocation()), calcYFromCoor(a.getCampLocation())); // if carrying a Tilia, go to camp
+		} 
+		else { // go pick up a tilia closest to position
 			int coin = 0;
 			if (a.isRed()) {
 				if (coins_red.size() >= 1) {
@@ -484,715 +480,7 @@ public class GameLogic {
 		String tileType;
 		ArrayList<Integer> processedOpenings = new ArrayList<Integer>();
 		ArrayList<Integer> openings = new ArrayList<Integer>();
-		// cluster 1
 		
-		for (int i = 0; i < clusterHeight; i++) {
-			coordinate = returnCoorFromXY(14, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(1, 2, processedOpenings.get(i));
-			cluster1Nodes.add(tmp);
-			cluster2Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 0; i < clusterWidth - 1; i++) {
-			coordinate = returnCoorFromXY(i, 9);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(1, 6, processedOpenings.get(i));
-			cluster1Nodes.add(tmp);
-			cluster6Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 2
-
-		for (int i = 0; i < clusterHeight; i++) {
-			coordinate = returnCoorFromXY(29, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(2, 3, processedOpenings.get(i));
-			cluster2Nodes.add(tmp);
-			cluster3Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 15; i < 14 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 9);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(2, 7, processedOpenings.get(i));
-			cluster2Nodes.add(tmp);
-			cluster7Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 3
-
-		for (int i = 0; i < clusterHeight; i++) {
-			coordinate = returnCoorFromXY(44, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(3, 4, processedOpenings.get(i));
-			cluster3Nodes.add(tmp);
-			cluster4Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 30; i < 29 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 9);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(3, 8, processedOpenings.get(i));
-			cluster3Nodes.add(tmp);
-			cluster8Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 4
-		
-		for (int i = 0; i < clusterHeight; i++) {
-			coordinate = returnCoorFromXY(59, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(4, 5, processedOpenings.get(i));
-			cluster4Nodes.add(tmp);
-			cluster5Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 45; i < 44 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 9);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(4, 9, processedOpenings.get(i));
-			cluster4Nodes.add(tmp);
-			cluster9Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 5
-		
-		for (int i = 60; i < 60 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 9);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(5, 10, processedOpenings.get(i));
-			cluster5Nodes.add(tmp);
-			cluster10Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 6
-		
-		for (int i = 10; i < 10 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(14, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(6, 7, processedOpenings.get(i));
-			cluster6Nodes.add(tmp);
-			cluster7Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 0; i < clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 19);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(6, 11, processedOpenings.get(i));
-			cluster6Nodes.add(tmp);
-			cluster11Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 7
-		
-		for (int i = 10; i < 10 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(29, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(7, 8, processedOpenings.get(i));
-			cluster7Nodes.add(tmp);
-			cluster8Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 15; i < 14 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 19);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(7, 12, processedOpenings.get(i));
-			cluster7Nodes.add(tmp);
-			cluster12Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 8
-		
-		for (int i = 10; i < 10 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(44, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(8, 9, processedOpenings.get(i));
-			cluster8Nodes.add(tmp);
-			cluster9Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 30; i < 29 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 19);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(8, 13, processedOpenings.get(i));
-			cluster8Nodes.add(tmp);
-			cluster13Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 9
-		
-		for (int i = 10; i < 10 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(59, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(9, 10, processedOpenings.get(i));
-			cluster9Nodes.add(tmp);
-			cluster10Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 45; i < 44 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 19);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(9, 14, processedOpenings.get(i));
-			cluster9Nodes.add(tmp);
-			cluster14Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 10
-		
-		for (int i = 60; i < 60 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 19);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(10, 15, processedOpenings.get(i));
-			cluster10Nodes.add(tmp);
-			cluster15Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 11
-		
-		for (int i = 20; i < 20 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(14, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(11, 12, processedOpenings.get(i));
-			cluster11Nodes.add(tmp);
-			cluster12Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 0; i < clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 29);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(11, 16, processedOpenings.get(i));
-			cluster11Nodes.add(tmp);
-			cluster16Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 12
-		
-		for (int i = 20; i < 20 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(29, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(12, 13, processedOpenings.get(i));
-			cluster12Nodes.add(tmp);
-			cluster13Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 15; i < 14 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 29);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(12, 17, processedOpenings.get(i));
-			cluster12Nodes.add(tmp);
-			cluster17Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 13
-		
-		for (int i = 20; i < 20 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(44, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(13, 14, processedOpenings.get(i));
-			cluster13Nodes.add(tmp);
-			cluster14Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 30; i < 29 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 29);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(13, 18, processedOpenings.get(i));
-			cluster13Nodes.add(tmp);
-			cluster18Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 14
-		
-		for (int i = 20; i < 20 + clusterHeight; i++) {
-			coordinate = returnCoorFromXY(59, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(14, 15, processedOpenings.get(i));
-			cluster14Nodes.add(tmp);
-			cluster15Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println();
-
-		openings.clear();
-		processedOpenings.clear();
-		for (int i = 45; i < 44 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 29);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(14, 19, processedOpenings.get(i));
-			cluster14Nodes.add(tmp);
-			cluster19Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 15
-		
-		for (int i = 60; i < 60 + clusterWidth; i++) {
-			coordinate = returnCoorFromXY(i, 29);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(15, 20, processedOpenings.get(i));
-			cluster15Nodes.add(tmp);
-			cluster20Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// De laatste 5 clusters moeten anders worden behandeld
-		// cluster 16
-	
-		for (int i = 30; i < 42; i++) {
-			coordinate = returnCoorFromXY(14, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(16, 17, processedOpenings.get(i));
-			cluster16Nodes.add(tmp);
-			cluster17Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 17
-		
-		for (int i = 30; i < 42; i++) {
-			coordinate = returnCoorFromXY(29, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(17, 18, processedOpenings.get(i));
-			cluster17Nodes.add(tmp);
-			cluster18Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 18
-		
-		for (int i = 30; i < 42; i++) {
-			coordinate = returnCoorFromXY(44, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(18, 19, processedOpenings.get(i));
-			cluster18Nodes.add(tmp);
-			cluster19Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
-		// cluster 19
-		
-		for (int i = 30; i < 42; i++) {
-			coordinate = returnCoorFromXY(59, i);
-			current = getTile(coordinate);
-			tileType = current.getIdentifier();
-			if (tileType.equals(Tile.GRASS_TILE)) {
-				openings.add(coordinate);
-			}
-		}
-		if (openings.size() > 0)
-			processedOpenings = processOpenings(openings);
-
-		for (int i = 0; i < processedOpenings.size(); i++) {
-			tmp = new Node(19, 20, processedOpenings.get(i));
-			cluster19Nodes.add(tmp);
-			cluster20Nodes.add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
-		}
-		System.out.println("xxx");
-
-		openings.clear();
-		processedOpenings.clear();
-
 		allNodes.add(cluster1Nodes);
 		allNodes.add(cluster2Nodes);
 		allNodes.add(cluster3Nodes);
@@ -1214,208 +502,195 @@ public class GameLogic {
 		allNodes.add(cluster19Nodes);
 		allNodes.add(cluster20Nodes);
 		
-		/*
-		LinkedList<Integer> tmp_moves = new LinkedList<Integer>();
-		for(int i=0; i<cluster1Nodes.size(); i++){
-			for(int j=0; j<cluster1Nodes.size(); j++){
-				if(cluster1Nodes.get(i).tilenum != cluster1Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster1Nodes.get(i).tilenum, cluster1Nodes.get(j).tilenum);
-					cluster1Nodes.get(i).addMovement(tmp_moves);
-					cluster1Nodes.get(i).addDestination(cluster1Nodes.get(j).tilenum);
-				}
+		for(int i=0; i<20; i++){
+			walls.add(new Wall(i+1));
+		}
+		
+		//hulpvariabelen
+			int hor_begin=0, hor_end=0, ver_begin=0, ver_end=0, ver_x=0, hor_y=0;
+			
+		for(int j=1; j < 16; j++){
+			switch(j){
+			case 1: 
+				hor_begin = 0; ver_begin = 0; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 14; hor_y = 9;
+				break;
+			case 2: 
+				hor_begin = 15; ver_begin = 0; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 29; hor_y = 9;
+				break;
+			case 3: 
+				hor_begin = 30; ver_begin = 0; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 44; hor_y = 9;
+				break;
+			case 4: 
+				hor_begin = 45; ver_begin = 0; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 59; hor_y = 9;
+				break;
+			case 5: 
+				hor_begin = 60; ver_begin = 0; 
+				hor_end = hor_begin + clusterWidth; ver_end = ver_begin;
+				ver_x = 0; hor_y = 9;
+				break;
+			case 6: 
+				hor_begin = 0; ver_begin = 10; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 14; hor_y = 19;
+				break;
+			case 7: 
+				hor_begin = 15; ver_begin = 10; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 29; hor_y = 19;
+				break;
+			case 8: 
+				hor_begin = 30; ver_begin = 10; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 44; hor_y = 19;
+				break;
+			case 9: 
+				hor_begin = 45; ver_begin = 10; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 59; hor_y = 19;
+				break;
+			case 10: 
+				hor_begin = 60; ver_begin = 0; 
+				hor_end = hor_begin + clusterWidth; ver_end = ver_begin;
+				ver_x = 0; hor_y = 19;
+				break;
+			case 11: 
+				hor_begin = 0; ver_begin = 20; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 14; hor_y = 29;
+				break;
+			case 12: 
+				hor_begin = 15; ver_begin = 20; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 29; hor_y = 29;
+				break;
+			case 13: 
+				hor_begin = 30; ver_begin = 20; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 44; hor_y = 29;
+				break;
+			case 14: 
+				hor_begin = 45; ver_begin = 20; 
+				hor_end = hor_begin + clusterWidth -1; ver_end = ver_begin + clusterHeight;
+				ver_x = 59; hor_y = 29;
+				break;
+			case 15: 
+				hor_begin = 60; ver_begin = 0; 
+				hor_end = hor_begin + clusterWidth; ver_end = ver_begin;
+				ver_x = 0; hor_y = 29;
+				break;
+			}
+		
+		for (int i = ver_begin; i < ver_end; i++) {
+			coordinate = returnCoorFromXY(ver_x, i);
+			current = getTile(coordinate);
+			tileType = current.getIdentifier();
+			if (tileType.equals(Tile.GRASS_TILE)) {
+				openings.add(coordinate);
 			}
 		}
-		for(int i=0; i<cluster2Nodes.size(); i++){
-			for(int j=0; j<cluster2Nodes.size(); j++){
-				if(cluster2Nodes.get(i).tilenum != cluster2Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster2Nodes.get(i).tilenum, cluster2Nodes.get(j).tilenum);
-					cluster2Nodes.get(i).addMovement(tmp_moves);
-					cluster2Nodes.get(i).addDestination(cluster2Nodes.get(j).tilenum);
-				}
+		if (openings.size() > 0)
+			processedOpenings = processOpenings(openings);
+		else {
+			walls.get(j-1).blockedClusters.add(j+1);
+			walls.get(j).blockedClusters.add(j);
+		}
+
+		for (int i = 0; i < processedOpenings.size(); i++) {
+			tmp = new Node(j, j+1, processedOpenings.get(i));
+			allNodes.get(j-1).add(tmp);
+			allNodes.get(j).add(tmp);
+			System.out.print(processedOpenings.get(i) + " ");// debug
+		}
+		System.out.println();
+
+		openings.clear();
+		processedOpenings.clear();
+		for (int i = hor_begin; i < hor_end; i++) {
+			coordinate = returnCoorFromXY(i, hor_y);
+			current = getTile(coordinate);
+			tileType = current.getIdentifier();
+			if (tileType.equals(Tile.GRASS_TILE)) {
+				openings.add(coordinate);
 			}
 		}
-		for(int i=0; i<cluster3Nodes.size(); i++){
-			for(int j=0; j<cluster3Nodes.size(); j++){
-				if(cluster3Nodes.get(i).tilenum != cluster3Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster3Nodes.get(i).tilenum, cluster3Nodes.get(j).tilenum);
-					cluster3Nodes.get(i).addMovement(tmp_moves);
-					cluster3Nodes.get(i).addDestination(cluster3Nodes.get(j).tilenum);
+		if (openings.size() > 0)
+			processedOpenings = processOpenings(openings);
+		else {
+			walls.get(j-1).blockedClusters.add(j+5);
+			walls.get(j+4).blockedClusters.add(j);
+		}
+
+		for (int i = 0; i < processedOpenings.size(); i++) {
+			tmp = new Node(j, j+5, processedOpenings.get(i));
+			allNodes.get(j-1).add(tmp);
+			allNodes.get(j+4).add(tmp);
+			System.out.print(processedOpenings.get(i) + " ");// debug
+		}
+		System.out.println("xxx");
+
+		openings.clear();
+		processedOpenings.clear();
+
+		}
+		// the last 4 clusters are handled seperatly for convenience
+		for(int j=0; j<4; j++){
+			for (int i = 30; i < 42; i++) {
+				coordinate = returnCoorFromXY(14+15*j, i);
+				current = getTile(coordinate);
+				tileType = current.getIdentifier();
+				if (tileType.equals(Tile.GRASS_TILE)) {
+					openings.add(coordinate);
 				}
 			}
-		}
-		for(int i=0; i<cluster4Nodes.size(); i++){
-			for(int j=0; j<cluster4Nodes.size(); j++){
-				if(cluster4Nodes.get(i).tilenum != cluster4Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster4Nodes.get(i).tilenum, cluster4Nodes.get(j).tilenum);
-					cluster4Nodes.get(i).addMovement(tmp_moves);
-					cluster4Nodes.get(i).addDestination(cluster4Nodes.get(j).tilenum);
-				}
+			if (openings.size() > 0)
+				processedOpenings = processOpenings(openings);
+			else {
+				walls.get(16+j-1).blockedClusters.add(16+j+1);
+				walls.get(16+j).blockedClusters.add(16+j);
 			}
-		}
-		for(int i=0; i<cluster5Nodes.size(); i++){
-			for(int j=0; j<cluster5Nodes.size(); j++){
-				if(cluster5Nodes.get(i).tilenum != cluster5Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster5Nodes.get(i).tilenum, cluster5Nodes.get(j).tilenum);
-					cluster5Nodes.get(i).addMovement(tmp_moves);
-					cluster5Nodes.get(i).addDestination(cluster5Nodes.get(j).tilenum);
-				}
+
+			for (int i = 0; i < processedOpenings.size(); i++) {
+				tmp = new Node(16+j, 17+j, processedOpenings.get(i));
+				allNodes.get(15+j).add(tmp);
+				allNodes.get(16+j).add(tmp);
+				System.out.print(processedOpenings.get(i) + " ");// debug
 			}
-		}
-		for(int i=0; i<cluster6Nodes.size(); i++){
-			for(int j=0; j<cluster6Nodes.size(); j++){
-				if(cluster6Nodes.get(i).tilenum != cluster6Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster6Nodes.get(i).tilenum, cluster6Nodes.get(j).tilenum);
-					cluster6Nodes.get(i).addMovement(tmp_moves);
-					cluster6Nodes.get(i).addDestination(cluster6Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster7Nodes.size(); i++){
-			for(int j=0; j<cluster7Nodes.size(); j++){
-				if(cluster7Nodes.get(i).tilenum != cluster7Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster7Nodes.get(i).tilenum, cluster7Nodes.get(j).tilenum);
-					cluster7Nodes.get(i).addMovement(tmp_moves);
-					cluster7Nodes.get(i).addDestination(cluster7Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster8Nodes.size(); i++){
-			for(int j=0; j<cluster8Nodes.size(); j++){
-				if(cluster8Nodes.get(i).tilenum != cluster8Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster8Nodes.get(i).tilenum, cluster8Nodes.get(j).tilenum);
-					cluster8Nodes.get(i).addMovement(tmp_moves);
-					cluster8Nodes.get(i).addDestination(cluster8Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster9Nodes.size(); i++){
-			for(int j=0; j<cluster9Nodes.size(); j++){
-				if(cluster9Nodes.get(i).tilenum != cluster9Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster9Nodes.get(i).tilenum, cluster9Nodes.get(j).tilenum);
-					cluster9Nodes.get(i).addMovement(tmp_moves);
-					cluster9Nodes.get(i).addDestination(cluster9Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster10Nodes.size(); i++){
-			for(int j=0; j<cluster10Nodes.size(); j++){
-				if(cluster10Nodes.get(i).tilenum != cluster10Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster10Nodes.get(i).tilenum, cluster10Nodes.get(j).tilenum);
-					cluster10Nodes.get(i).addMovement(tmp_moves);
-					cluster10Nodes.get(i).addDestination(cluster10Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster11Nodes.size(); i++){
-			for(int j=0; j<cluster11Nodes.size(); j++){
-				if(cluster11Nodes.get(i).tilenum != cluster11Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster11Nodes.get(i).tilenum, cluster11Nodes.get(j).tilenum);
-					cluster11Nodes.get(i).addMovement(tmp_moves);
-					cluster11Nodes.get(i).addDestination(cluster11Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster12Nodes.size(); i++){
-			for(int j=0; j<cluster12Nodes.size(); j++){
-				if(cluster12Nodes.get(i).tilenum != cluster12Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster12Nodes.get(i).tilenum, cluster12Nodes.get(j).tilenum);
-					cluster12Nodes.get(i).addMovement(tmp_moves);
-					cluster12Nodes.get(i).addDestination(cluster12Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster13Nodes.size(); i++){
-			for(int j=0; j<cluster13Nodes.size(); j++){
-				if(cluster13Nodes.get(i).tilenum != cluster13Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster13Nodes.get(i).tilenum, cluster13Nodes.get(j).tilenum);
-					cluster13Nodes.get(i).addMovement(tmp_moves);
-					cluster13Nodes.get(i).addDestination(cluster13Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster14Nodes.size(); i++){
-			for(int j=0; j<cluster14Nodes.size(); j++){
-				if(cluster14Nodes.get(i).tilenum != cluster14Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster14Nodes.get(i).tilenum, cluster14Nodes.get(j).tilenum);
-					cluster14Nodes.get(i).addMovement(tmp_moves);
-					cluster14Nodes.get(i).addDestination(cluster14Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster15Nodes.size(); i++){
-			for(int j=0; j<cluster15Nodes.size(); j++){
-				if(cluster15Nodes.get(i).tilenum != cluster15Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster15Nodes.get(i).tilenum, cluster15Nodes.get(j).tilenum);
-					cluster15Nodes.get(i).addMovement(tmp_moves);
-					cluster15Nodes.get(i).addDestination(cluster15Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster16Nodes.size(); i++){
-			for(int j=0; j<cluster16Nodes.size(); j++){
-				if(cluster16Nodes.get(i).tilenum != cluster16Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster16Nodes.get(i).tilenum, cluster16Nodes.get(j).tilenum);
-					cluster16Nodes.get(i).addMovement(tmp_moves);
-					cluster16Nodes.get(i).addDestination(cluster16Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster17Nodes.size(); i++){
-			for(int j=0; j<cluster17Nodes.size(); j++){
-				if(cluster17Nodes.get(i).tilenum != cluster17Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster17Nodes.get(i).tilenum, cluster17Nodes.get(j).tilenum);
-					cluster17Nodes.get(i).addMovement(tmp_moves);
-					cluster17Nodes.get(i).addDestination(cluster17Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster18Nodes.size(); i++){
-			for(int j=0; j<cluster18Nodes.size(); j++){
-				if(cluster18Nodes.get(i).tilenum != cluster18Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster18Nodes.get(i).tilenum, cluster18Nodes.get(j).tilenum);
-					cluster18Nodes.get(i).addMovement(tmp_moves);
-					cluster18Nodes.get(i).addDestination(cluster18Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster19Nodes.size(); i++){
-			for(int j=0; j<cluster19Nodes.size(); j++){
-				if(cluster19Nodes.get(i).tilenum != cluster19Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster19Nodes.get(i).tilenum, cluster19Nodes.get(j).tilenum);
-					cluster19Nodes.get(i).addMovement(tmp_moves);
-					cluster19Nodes.get(i).addDestination(cluster19Nodes.get(j).tilenum);
-				}
-			}
-		}
-		for(int i=0; i<cluster20Nodes.size(); i++){
-			for(int j=0; j<cluster20Nodes.size(); j++){
-				if(cluster20Nodes.get(i).tilenum != cluster20Nodes.get(j).tilenum){
-					tmp_moves=a.getAStarPath(cluster20Nodes.get(i).tilenum, cluster20Nodes.get(j).tilenum);
-					cluster20Nodes.get(i).addMovement(tmp_moves);
-					cluster20Nodes.get(i).addDestination(cluster20Nodes.get(j).tilenum);
-				}
-			}
-		}
-	*/
+			System.out.println("xxx");
+
+			openings.clear();
+			processedOpenings.clear();
+		}	
 	}
 
+	// deze methode zorgt ervoor dat 1 grote opening als 1 opening wordt aangezien, in plaats van bvb 3 verschillende naast elkaar
 	private ArrayList<Integer> processOpenings(ArrayList<Integer> openings) {
 		int prev = openings.get(0);
 		int current;
 		boolean check = false;
+		int counter=0; //tellen hoeveel openingen na elkaar komen
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		for (int i = 1; i < openings.size(); i++) {
 			current = openings.get(i);
 			if ((current == prev + 1) || (current == prev + this.squaresX)) {
+				counter++;
 				check = true;
 			} else
 				check = false;
 			if (!check) {
-				ret.add(openings.get(i - 1));
+				ret.add(openings.get(i - counter/2 - 1));
+				counter=0;
 			}
 			prev = current;
 		}
-		ret.add(openings.get(openings.size() - 1));
+		ret.add(openings.get(openings.size() - 1 - counter/2));
 		return ret;
 	}
 

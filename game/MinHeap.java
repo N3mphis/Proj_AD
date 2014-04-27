@@ -1,42 +1,18 @@
 package game;
-
 import java.util.ArrayList;
-
-/**
- * class with methods to create and maintain a MinHeap
- */
 public class MinHeap<Type extends Comparable<Type>> {
 
-	ArrayList<Type> heap;// in which Type can be String, Integer, ...
+	public ArrayList<Type> heap;
 
-	/**
-	 * create new MinHeap object
-	 */
 	public MinHeap() {
 		heap = new ArrayList<Type>();
-
 	}
 
-	/**
-	 * add performs the following actions: - increase length of the heap by 1 -
-	 * start at last (=new) leaf: compare the node to be added with the parent,
-	 * exchange if necessary; continue until the root, if necessary - use
-	 * compareTo to compare nodes
-	 * 
-	 * @param node
-	 *            : to be added to the MinHeap
-	 */
 	public void add(Type node) {
 		heap.add(node);
 		minHeapify_bottom_up(heap.size() - 1);
 	}
 
-	/**
-	 * performs the following actions: - extract the root, - decrease the length
-	 * of the heap by 1 - take care of the heap property (via minHeapify)
-	 * 
-	 * @return root node (=minimum of the heap)
-	 */
 	public Type extractMin() {// (formerly called 'remove()')
 		if (heap.size() == 0)
 			return null;
@@ -47,13 +23,22 @@ public class MinHeap<Type extends Comparable<Type>> {
 		return temp;
 	}
 
-	/**
-	 * From the given index onwards, take care of the MinHeap property, assuming
-	 * that the children of the current node are roots of correct MinHeaps. see
-	 * Cormen p. 154 (but Min instead of Max)
-	 * 
-	 * @param index
-	 */
+	public int containsElement(Type check){
+		//return -1 if element is not found
+		int ret=-1;
+		for(int i=0; i<heap.size();i++){
+			if(heap.get(i).equals(check)){ 
+				ret = i;
+				i=heap.size();
+			}
+		}
+		return ret;
+	}
+	
+	public void set(int pos, Type set_it){
+		heap.set(pos,set_it);
+	}
+	
 	public void minHeapify_top_down(int index) {
 		int small;
 		if (index * 2 + 1 >= heap.size())

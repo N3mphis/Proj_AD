@@ -57,91 +57,111 @@ public class HierarchicalWalker extends Agent {
 			return getAStarPath (position, goal);
 		}
 		Node start= logic.allNodes.get(i-1).get(0);
-		int min = 9999;
+		int min = 8192;
 		for(int k = 0; k < logic.allNodes.get(i-1).size();k++){
 			if(get_distance(goal,logic.allNodes.get(i-1).get(k).tilenum)< min){
 				min = get_distance(goal,logic.allNodes.get(i-1).get(k).tilenum);
 				start = logic.allNodes.get(i-1).get(k);
 			}
 		}
-		ret = getAStarPath(position, start.tilenum);
 		
+		
+		if(logic.allNodes.get(j-1).size()==0){
+			System.out.println();
+		}
+		Node end= logic.allNodes.get(j-1).get(0);
+		min = 8192;
+		for(int k = 0; k < logic.allNodes.get(j-1).size();k++){
+			if((get_distance(position,logic.allNodes.get(j-1).get(k).tilenum) + get_distance(goal,logic.allNodes.get(j-1).get(k).tilenum))< min){
+				min = (get_distance(position,logic.allNodes.get(j-1).get(k).tilenum) + get_distance(goal,logic.allNodes.get(j-1).get(k).tilenum));
+				end = logic.allNodes.get(j-1).get(k);
+			}
+		}
+		
+		ArrayList<Node> visitedNodes = new ArrayList<Node>();
+		ArrayList<Node> backwardsNodes = new ArrayList<Node>();
+		visitedNodes.add(start);
+		backwardsNodes.add(end);
 		Node next = start;
 		Node tmp_node = next;
 		Node current = next; //the node we are examining
-		int prev_cluster=i; // we want to keep track of the cluster we came from, so we don't end up in an endless loop
+		Node prev_node = start; // we want to keep track of the last 2 nodes we came from, so we don't end up in an endless loop
+		Node prev2_node = start;
+		Node swapper; // a temporary value to be able to swap 2 nodes
 		
-		int debugcounter=0;
-		while(next.cluster1!=j && next.cluster2!=j){ // stop when arrived at the correct cluster
-		//
-		min = 9999;
-		if(next.cluster1!=prev_cluster){
-			prev_cluster=next.cluster1;
+		
+		int debugcounter = 0;
+		while(next!=end){ // stop when arrived at the correct node
+		min = 8192;
 		for(int k = 0; k < logic.allNodes.get(next.cluster1 - 1).size();k++){
 			current = logic.allNodes.get(next.cluster1 - 1).get(k);
-			if((current.tilenum != next.tilenum )&& ((get_distance(goal, current.tilenum)< min)||(current.cluster1==j)||(current.cluster2==j))){
-				if(current.cluster1==j||current.cluster2==j){
-					if((tmp_node.cluster1!=j&&tmp_node.cluster2!=j)){
-						min = get_distance(goal,current.tilenum);
-						tmp_node = current;
-					}
-					else if(get_distance(goal, current.tilenum)<get_distance(goal, tmp_node.tilenum)){
-						min = get_distance(goal,current.tilenum);
-						tmp_node = current;
-					}
-				}
-				else if((tmp_node.cluster1==j||tmp_node.cluster2==j)){} //do nothing
-				else{
-					min = get_distance(goal,current.tilenum);
+			if((current.tilenum != prev2_node.tilenum )&& (current.tilenum != prev_node.tilenum )&& (current.tilenum != next.tilenum ) || (current==end)){
+				if(current==end){
+					min = 0;
 					tmp_node = current;
 				}
-			}
-		}
-		}
-		else if(next.cluster2!=prev_cluster){
-			prev_cluster=next.cluster2;
-		for(int k = 0; k < logic.allNodes.get(next.cluster2 - 1).size();k++){
-			current = logic.allNodes.get(next.cluster2 - 1).get(k);
-			if((current.tilenum != next.tilenum )&& ((get_distance(goal, current.tilenum)< min)||(current.cluster1==j)||(current.cluster2==j))){
-				if(current.cluster1==j||current.cluster2==j){
-					if((tmp_node.cluster1!=j&&tmp_node.cluster2!=j)){
-						min = get_distance(goal,current.tilenum);
-						tmp_node = current;
-					}
-					else if(get_distance(goal, current.tilenum)<get_distance(goal, tmp_node.tilenum)){
-						min = get_distance(goal,current.tilenum);
-						tmp_node = current;
-					}
-				}
-				else if((tmp_node.cluster1==j||tmp_node.cluster2==j)){} //do nothing
-				else{
-					min = get_distance(goal,current.tilenum);
+				else if(get_distance(next.tilenum, current.tilenum)+ get_distance(current.tilenum, end.tilenum)< min){
+					min = get_distance(next.tilenum, current.tilenum)+ get_distance(current.tilenum, end.tilenum);
 					tmp_node = current;
 				}
+				else if(current.cluster1==end.cluster1 || current.cluster1==end.cluster2 || current.cluster2==end.cluster1 || current.cluster2==end.cluster2){
+					if(tmp_node.cluster1 != end.cluster1 && tmp_node.cluster2 != end.cluster1 && tmp_node.cluster1 != end.cluster2 && tmp_node.cluster2 != end.cluster2){
+						min=get_distance(current.tilenum, end.tilenum);
+						tmp_node = current;
+					}
+					else if(get_distance(current.tilenum, end.tilenum) < min){
+						min=get_distance(current.tilenum, end.tilenum);
+						tmp_node = current;
+					}
+				} 
 			}
 		}
+		
+		if(min!=0){
+			for(int k = 0; k < logic.allNodes.get(next.cluster2 - 1).size();k++){
+				current = logic.allNodes.get(next.cluster2 - 1).get(k);
+				if((current.tilenum != prev2_node.tilenum )&& (current.tilenum != prev_node.tilenum )&& (current.tilenum != next.tilenum ) || (current==end)){
+					if(current==end){
+						min = 0;
+						tmp_node = current;
+						break;
+					}
+					else if(get_distance(next.tilenum, current.tilenum)+ get_distance(current.tilenum, end.tilenum)< min){
+						min = get_distance(next.tilenum, current.tilenum)+ get_distance(current.tilenum, end.tilenum);
+						tmp_node = current;
+					}
+					else if(current.cluster1==end.cluster1 || current.cluster1==end.cluster2 || current.cluster2==end.cluster1 || current.cluster2==end.cluster2){
+						if(tmp_node.cluster1 != end.cluster1 && tmp_node.cluster2 != end.cluster1 && tmp_node.cluster1 != end.cluster2 && tmp_node.cluster2 != end.cluster2){
+							min=get_distance(current.tilenum, end.tilenum);
+							tmp_node = current;
+						}
+						else if(get_distance(current.tilenum, end.tilenum) < min){
+							min=get_distance(current.tilenum, end.tilenum);
+							tmp_node = current;
+						}
+					} 
+				}
+			}	
 		}
-		else {
-			System.out.println("ERROR\nERROR\nERROR");
-			tmp = getAStarPath (next.tilenum, goal);
-			break;
-		}
-		if(tmp_node.tilenum==next.tilenum){
-			System.out.println("ERROR\nERROR\nERROR");
-			tmp = getAStarPath (next.tilenum, goal);
-			break;
-		}
-		else{
-			tmp = getAStarPath (next.tilenum, tmp_node.tilenum);
-		}
-		ret.addAll(tmp);
+		visitedNodes.add(tmp_node);
+		
+		prev2_node = prev_node;
+		swapper = next;
 		next = tmp_node;
+		prev_node = swapper;
 		debugcounter++;
 		if(debugcounter > 100){
 			System.out.println();
 		}
 		}
-		tmp = getAStarPath (next.tilenum, goal);
+		
+		tmp = getAStarPath (position , visitedNodes.get(0).tilenum);
+		ret.addAll(tmp);
+		for(int k = 0; k < visitedNodes.size()-1;k++){
+			tmp = getAStarPath (visitedNodes.get(k).tilenum, visitedNodes.get(k+1).tilenum);
+			ret.addAll(tmp);	
+		}
+		tmp = getAStarPath (visitedNodes.get(visitedNodes.size()-1).tilenum, goal);
 		ret.addAll(tmp);
 		return ret;
 	}
@@ -158,7 +178,7 @@ public class HierarchicalWalker extends Agent {
 			else if(y < 30){
 				cluster=11;
 			}
-			else if(y < 40){
+			else if(y < 43){
 				cluster=16;
 			}
 		}
@@ -172,7 +192,7 @@ public class HierarchicalWalker extends Agent {
 			else if(y < 30){
 				cluster=12;
 			}
-			else if(y < 40){
+			else if(y < 43){
 				cluster=17;
 			}
 		}
@@ -186,7 +206,7 @@ public class HierarchicalWalker extends Agent {
 			else if(y < 30){
 				cluster=13;
 			}
-			else if(y < 40){
+			else if(y < 43){
 				cluster=18;
 			}
 		}
@@ -200,7 +220,7 @@ public class HierarchicalWalker extends Agent {
 			else if(y < 30){
 				cluster=14;
 			}
-			else if(y < 40){
+			else if(y < 43){
 				cluster=19;
 			}
 		}
@@ -214,7 +234,7 @@ public class HierarchicalWalker extends Agent {
 			else if(y < 30){
 				cluster=15;
 			}
-			else if(y < 40){
+			else if(y < 43){
 				cluster=20;
 			}
 		}
@@ -289,35 +309,37 @@ public class HierarchicalWalker extends Agent {
 		newtile = logic.returnCoorFromXY(x_add, y_add);
 		if(newtile!=-1){
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
-		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde + 2 + de h-waarde
+		f_val = h_val + tmp_min.g_val + 1;
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
+
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
-					}
-				}
-			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
 				}
 			}
-			else{
-			openList.add(bundle);
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
 			mark[newtile]=1; // de tegel markeren
+			tile = this.getTile(newtile);
+			tileType = tile.getIdentifier();
+			if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
+				// deze tegel voegen we niet toe
+			}
+			else if(tileType.equals(Tile.COIN_TILE)){
+				// deze tegel voegen we ook niet toe, anders geraakt het algoritme in de war
+			}
+			else {
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
@@ -334,33 +356,35 @@ public class HierarchicalWalker extends Agent {
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
 		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde +1 + de h-waarde
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
+
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
-					}
-				}
-//			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
 				}
 			}
-			else{
-			openList.add(bundle);
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
 			mark[newtile]=1; // de tegel markeren
+			tile = this.getTile(newtile);
+			tileType = tile.getIdentifier();
+			if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
+				// deze tegel voegen we niet toe
+			}
+			else if(tileType.equals(Tile.COIN_TILE)){
+				// deze tegel voegen we ook niet toe
+			}
+			else {
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
@@ -377,33 +401,35 @@ public class HierarchicalWalker extends Agent {
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
 		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde +1 + de h-waarde   -> verandert naar 2!
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
-					openList.set(openList.find_index.get(newtile), bundle); 
-					}
-				}
-			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
+
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
+					openList.set(openList.find_index.get(newtile), bundle);
 				}
 			}
-			else{
-			openList.add(bundle);
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
 			mark[newtile]=1; // de tegel markeren
+			tile = this.getTile(newtile);
+			tileType = tile.getIdentifier();
+			if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
+				// deze tegel voegen we niet toe
+			}
+			else if(tileType.equals(Tile.COIN_TILE)){
+				// deze tegel voegen we ook niet toe
+			}
+			else {
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
@@ -420,33 +446,35 @@ public class HierarchicalWalker extends Agent {
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
 		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde +1 + de h-waarde   -> verandert naar 2!
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]==1){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
+
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
-					}
-				}
-			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
 				}
 			}
-			else{
-			openList.add(bundle);
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
 			mark[newtile]=1; // de tegel markeren
+			tile = this.getTile(newtile);
+			tileType = tile.getIdentifier();
+			if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
+				// deze tegel voegen we niet toe
+			}
+			else if(tileType.equals(Tile.COIN_TILE)){
+				// deze tegel voegen we ook niet toe
+			}
+			else {
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
