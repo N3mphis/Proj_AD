@@ -63,7 +63,7 @@ public class AStarWalker extends Agent {
 		MinHeap openList = new MinHeap(max_tile); // in deze lijst plaatsen we de tegels die we mogelijks willen bekijken
 		//ArrayList<Values> closedList = new ArrayList<Values>(); // hier komen de tegels die reeds werden bekeken
 		Values start_val= new Values(start, 0, get_h(start, goal));
-		boolean mark[] = new boolean[max_tile]; // hier markeren we of tegels al eens bezocht werden of niet
+		int mark[] = new int[max_tile]; // hier markeren we of tegels al eens bezocht werden of niet
 		boolean in_closed [] = new boolean[max_tile];
 		int f_array [] = new int[max_tile];
 		
@@ -79,15 +79,15 @@ public class AStarWalker extends Agent {
 		Values end_bundle= start_val; // initialiseren
 		Tile tile;
 		String tileType;
-		//HashMap<Integer, Integer> backtrack = new HashMap<Integer, Integer>(); // deze hashmap houdt voor een tegel waar we geweest zijn bij vanwaar we kwamen
-		//backtrack.put(start, -1); // we houden bij dat we van de startknoop zijn vertrokken
+
 		boolean keep_looking = true;
 		
 		int counter=0; //debug waarde
 		int reworkcounter =0; //debug waarde
 		while(keep_looking){
 		counter++;
-		Values tmp_min = openList.extractMin();// minimum ophalen en tegel verwijderen uit de openlist
+		Values tmp_min = openList.min();// minimum ophalen
+		openList.extractMin(); // tegel verwijderen uit de openlist
 		in_closed[tmp_min.tilenum]= true;
 		f_array[tmp_min.tilenum]= tmp_min.f_val;
 		int min_pos = tmp_min.tilenum;
@@ -105,33 +105,26 @@ public class AStarWalker extends Agent {
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
 		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde + 2 + de h-waarde
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
-					}
-				}
-			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
 				}
 			}
-			else{
-			openList.add(bundle);
-			mark[newtile]=true; // de tegel markeren
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
+			mark[newtile]=1; // de tegel markeren
+			if (canAccess(newtile, goal)){	
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
@@ -146,35 +139,28 @@ public class AStarWalker extends Agent {
 		newtile = logic.returnCoorFromXY(x_add, y_add);
 		if(newtile!=-1){
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
-		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde +1 + de h-waarde
+		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde + 2 + de h-waarde
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
-					}
-				}
-//			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
 				}
 			}
-			else{
-			openList.add(bundle);
-			mark[newtile]=true; // de tegel markeren
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
+			mark[newtile]=1; // de tegel markeren
+			if (canAccess(newtile, goal)){	
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
@@ -189,35 +175,28 @@ public class AStarWalker extends Agent {
 		newtile = logic.returnCoorFromXY(x_add, y_add);
 		if(newtile!=-1){
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
-		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde +1 + de h-waarde   -> verandert naar 2!
+		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde + 2 + de h-waarde
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
-					openList.set(openList.find_index.get(newtile), bundle); 
-					}
-				}
-			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
+					openList.set(openList.find_index.get(newtile), bundle);
 				}
 			}
-			else{
-			openList.add(bundle);
-			mark[newtile]=true; // de tegel markeren
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
+			mark[newtile]=1; // de tegel markeren
+			if (canAccess(newtile, goal)){	
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
@@ -232,35 +211,28 @@ public class AStarWalker extends Agent {
 		newtile = logic.returnCoorFromXY(x_add, y_add);
 		if(newtile!=-1){
 		h_val = get_h(newtile, goal); // als dit 0 is, zijn we aangekomen
-		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde +1 + de h-waarde   -> verandert naar 2!
+		f_val = h_val + tmp_min.g_val + 1; // oude g-waarde + 2 + de h-waarde
 		Values bundle = new Values(newtile, tmp_min.g_val + 1, f_val, tmp_min);
-		tile = this.getTile(newtile);
-		tileType = tile.getIdentifier();
-		
-		if (tileType.equals(Tile.ROCK_TILE)||(this.red && tileType.equals(Tile.BLUE_CAMP_TILE))||(!this.red && tileType.equals(Tile.RED_CAMP_TILE))||(tileType.equals(Tile.BLUE_CAMP_TILE) && newtile != goal)||(tileType.equals(Tile.RED_CAMP_TILE) && newtile != goal)){
-			// deze tegel voegen we niet toe
-		}
-		else { // toevoegen van de tegel aan de openList als dit moet
-			
-			if(mark[newtile]){ // de huidige tegel is al eens toegevoegd geweest
-				if(openList.find_index.containsKey(newtile)){
-					if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 5)){
-						reworkcounter++;
+		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
+			if(openList.find_index.containsKey(newtile)){
+				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
+					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
-					}
-				}
-			
-				if(in_closed[newtile]){
-					if(f_array[newtile] > f_val+4){ //f-waarden vergelijken
-						openList.add(bundle);
-						in_closed[newtile]= false;
-						reworkcounter++;
-					}
 				}
 			}
-			else{
-			openList.add(bundle);
-			mark[newtile]=true; // de tegel markeren
+			
+			if(in_closed[newtile]){
+				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
+					openList.add(bundle);
+					in_closed[newtile]= false;
+					reworkcounter++;
+				}
+			}	
+		}
+		else{
+			mark[newtile]=1; // de tegel markeren
+			if (canAccess(newtile, goal)){	
+				openList.add(bundle);
 			}
 		}
 		if(h_val==0){
@@ -289,8 +261,8 @@ public class AStarWalker extends Agent {
 
     public boolean canAccess(int position, int goal){
         String tileType = (this.getTile(position)).getIdentifier();
-    
-       boolean notAccessible = tileType.equals(Tile.ROCK_TILE) ||
+
+        boolean notAccessible = tileType.equals(Tile.ROCK_TILE) ||
                 (this.red && tileType.equals(Tile.BLUE_CAMP_TILE)) ||
                 (!this.red && tileType.equals(Tile.RED_CAMP_TILE)) || (tileType.equals(Tile.BLUE_CAMP_TILE) && position != goal) ||
                 (tileType.equals(Tile.RED_CAMP_TILE) && position != goal);

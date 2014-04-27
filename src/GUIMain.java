@@ -20,7 +20,7 @@ public class GUIMain {
 			
 			
 			
-/*
+
 			// Scenario 1: Trying out the A* star algorithm
 			// uncomment the following code.
 			// complete the code in the class AStarWalker
@@ -45,7 +45,7 @@ public class GUIMain {
 			int iterations = 500;
 			
 			// end scenario 1
-		*/	
+		
 			 
 			// Scenario 2: That's not fair
 			// uncomment the following code.
@@ -86,7 +86,7 @@ public class GUIMain {
 			// --  Briefly describe what you did and how it effects the game outcome.
 			//
 			// You can increase the speed variable 
-			
+			/*
 			
 			System.out.println("Starting scenario 3: ");
 			final String map = "process_problems.txt";
@@ -105,7 +105,7 @@ public class GUIMain {
 			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.GREEDY_SOLVER;
 			//end scenario 3
 			
-			
+			*/
 			
 			// Scenario 4  : entrances  (If you implemented hierarchical version)
 			// uncomment the following code.
@@ -158,7 +158,6 @@ public class GUIMain {
 			int iterations = 500;
 			// end scenario 5
 			*/
-			
 			
 			GameLogic logic = new GameLogic(iterations, pathCredits,calcCredits,collectionBlue, collectionRed, gui ,map, speed, bluePathStrategy, redPathStrategy, blueProcessingStrategy,redProcessingStrategy);
 			gui.setLogic (logic);
