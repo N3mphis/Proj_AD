@@ -25,7 +25,7 @@ import pathfinding.Agent;
 import pathfinding.RandomWalker;
 import pathfinding.HierarchicalWalker;
 import game.Node;
-import game.Wall;
+
 
 public class GameLogic {
 
@@ -99,16 +99,10 @@ public class GameLogic {
 																		// queue
 																		// of
 																		// red
-	private LinkedList<Integer> queueBlue = new LinkedList<Integer>(); // process
-																		// queue
-																		// of
-																		// blue
+	private LinkedList<Integer> queueBlue = new LinkedList<Integer>(); // process queue of blue
 
-	private volatile long blueToAddScore = -1; // finished tilia waiting to be
-												// added to score
-	private volatile long redToAddScore = -1; // finished tilia waiting to be
-												// added to score
-
+	private volatile long blueToAddScore = -1; // finished tilia waiting to be added to score
+	private volatile long redToAddScore = -1; // finished tilia waiting to be added to score
 	// selection of tilia's for each team
 	private TiliaCollection collectionRed; // red team tilias
 	private TiliaCollection collectionBlue; // blue team tilias
@@ -135,7 +129,6 @@ public class GameLogic {
 	public ArrayList<Node> cluster19Nodes;
 	public ArrayList<Node> cluster20Nodes;
 	public ArrayList<ArrayList<Node>> allNodes;
-	public ArrayList<Wall> walls;
 
 	public GameLogic(int totalSteps, int pathCredits, int calcCredits, TiliaCollection collectionBlue, TiliaCollection collectionRed, GUI gui, String map, double speed, GameLogic.AGENT_STRATEGY blueTeamPathStrategy,
 			GameLogic.AGENT_STRATEGY redTeamPathStrategy, GameLogic.PROCESSING_STRATEGY blueProcStrategy, GameLogic.PROCESSING_STRATEGY redProcStrategy) {
@@ -199,13 +192,12 @@ public class GameLogic {
 		cluster19Nodes = new ArrayList<Node>(); 
 		cluster20Nodes = new ArrayList<Node>(); 
 		allNodes = new ArrayList<ArrayList<Node>>();
-		walls = new ArrayList<Wall>();
 
 	}
 
 	public void start() {
-		//do the preprocessing
-		preprocessMap();
+		//uncomment to preprocess
+		//preprocessMap();  //do the preprocessing for map 4
 		// start game steps
 		long lastStep = System.currentTimeMillis();
 
@@ -353,13 +345,7 @@ public class GameLogic {
 	private void simpleAStarStrategy(final Agent a) {
 
 		if (a.getCarrying() > -1) {
-			a.calcPath(calcXFromCoor(a.getCampLocation()), calcYFromCoor(a.getCampLocation())); // if
-																								// carrying
-																								// a
-																								// Tilia,
-																								// go
-																								// to
-																								// camp
+			a.calcPath(calcXFromCoor(a.getCampLocation()), calcYFromCoor(a.getCampLocation())); // if carrying a Tilia, go to camp
 		} else { // go pick up a random tilia
 			ArrayList<Integer> coins = new ArrayList<Integer>(coinLocations.keySet());
 			int coin;
@@ -392,7 +378,8 @@ public class GameLogic {
 			public void run() {
 
 				if (redTeamPathStrategy.equals(AGENT_STRATEGY.ASTARWALKER)) {
-					simpleAStarStrategy(a);
+					// simpleAStarStrategy(a);
+					advancedStrategy(a);
 
 				} else if (redTeamPathStrategy.equals((AGENT_STRATEGY.RANDOM_WALKER))) {
 					simpleRandomStrategy(a);
@@ -410,7 +397,6 @@ public class GameLogic {
 		}).start();
 
 	}
-
 
 	private int getDistance(int coin, boolean red) {
 		int x = 0;
@@ -501,10 +487,6 @@ public class GameLogic {
 		allNodes.add(cluster18Nodes);
 		allNodes.add(cluster19Nodes);
 		allNodes.add(cluster20Nodes);
-		
-		for(int i=0; i<20; i++){
-			walls.add(new Wall(i+1));
-		}
 		
 		//hulpvariabelen
 			int hor_begin=0, hor_end=0, ver_begin=0, ver_end=0, ver_x=0, hor_y=0;
@@ -598,18 +580,12 @@ public class GameLogic {
 		}
 		if (openings.size() > 0)
 			processedOpenings = processOpenings(openings);
-		else {
-			walls.get(j-1).blockedClusters.add(j+1);
-			walls.get(j).blockedClusters.add(j);
-		}
 
 		for (int i = 0; i < processedOpenings.size(); i++) {
 			tmp = new Node(j, j+1, processedOpenings.get(i));
 			allNodes.get(j-1).add(tmp);
 			allNodes.get(j).add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
 		}
-		System.out.println();
 
 		openings.clear();
 		processedOpenings.clear();
@@ -623,18 +599,13 @@ public class GameLogic {
 		}
 		if (openings.size() > 0)
 			processedOpenings = processOpenings(openings);
-		else {
-			walls.get(j-1).blockedClusters.add(j+5);
-			walls.get(j+4).blockedClusters.add(j);
-		}
+
 
 		for (int i = 0; i < processedOpenings.size(); i++) {
 			tmp = new Node(j, j+5, processedOpenings.get(i));
 			allNodes.get(j-1).add(tmp);
 			allNodes.get(j+4).add(tmp);
-			System.out.print(processedOpenings.get(i) + " ");// debug
 		}
-		System.out.println("xxx");
 
 		openings.clear();
 		processedOpenings.clear();
@@ -652,18 +623,12 @@ public class GameLogic {
 			}
 			if (openings.size() > 0)
 				processedOpenings = processOpenings(openings);
-			else {
-				walls.get(16+j-1).blockedClusters.add(16+j+1);
-				walls.get(16+j).blockedClusters.add(16+j);
-			}
-
+			
 			for (int i = 0; i < processedOpenings.size(); i++) {
 				tmp = new Node(16+j, 17+j, processedOpenings.get(i));
 				allNodes.get(15+j).add(tmp);
 				allNodes.get(16+j).add(tmp);
-				System.out.print(processedOpenings.get(i) + " ");// debug
 			}
-			System.out.println("xxx");
 
 			openings.clear();
 			processedOpenings.clear();
@@ -733,7 +698,7 @@ public class GameLogic {
 
 					// replace simpleAStarStrategy with advancedStrategy
 					//
-					 //simpleAStarStrategy(a);
+					// simpleAStarStrategy(a);
 					advancedStrategy(a);
 
 				} else if (blueTeamPathStrategy.equals((AGENT_STRATEGY.RANDOM_WALKER))) {
@@ -805,6 +770,8 @@ public class GameLogic {
 			solver = new RecursiveSolver();
 		} else if (this.redProcStrategy.equals(GameLogic.PROCESSING_STRATEGY.SIMPLE_SOLVER)) {
 			solver = new SimpleSolver();
+		} else if (this.redProcStrategy.equals(GameLogic.PROCESSING_STRATEGY.GREEDY_SOLVER)) {
+			solver = new GreedySolver();
 		}
 		// ADD other options here
 		else {

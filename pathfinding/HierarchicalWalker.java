@@ -79,9 +79,7 @@ public class HierarchicalWalker extends Agent {
 		}
 		
 		ArrayList<Node> visitedNodes = new ArrayList<Node>();
-		ArrayList<Node> backwardsNodes = new ArrayList<Node>();
 		visitedNodes.add(start);
-		backwardsNodes.add(end);
 		Node next = start;
 		Node tmp_node = next;
 		Node current = next; //the node we are examining
@@ -288,10 +286,7 @@ public class HierarchicalWalker extends Agent {
 		//backtrack.put(start, -1); // we houden bij dat we van de startknoop zijn vertrokken
 		boolean keep_looking = true;
 		
-		int counter=0; //debug waarde
-		int reworkcounter =0; //debug waarde
 		while(keep_looking){
-		counter++;
 		Values tmp_min = openList.min();// minimum ophalen
 		openList.extractMin(); // tegel verwijderen uit de openlist
 		in_closed[tmp_min.tilenum]= true;
@@ -315,7 +310,6 @@ public class HierarchicalWalker extends Agent {
 		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
 			if(openList.find_index.containsKey(newtile)){
 				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
-					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
 				}
 			}
@@ -324,7 +318,6 @@ public class HierarchicalWalker extends Agent {
 				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
 					openList.add(bundle);
 					in_closed[newtile]= false;
-					reworkcounter++;
 				}
 			}	
 		}
@@ -360,7 +353,6 @@ public class HierarchicalWalker extends Agent {
 		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
 			if(openList.find_index.containsKey(newtile)){
 				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
-					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
 				}
 			}
@@ -369,7 +361,6 @@ public class HierarchicalWalker extends Agent {
 				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
 					openList.add(bundle);
 					in_closed[newtile]= false;
-					reworkcounter++;
 				}
 			}	
 		}
@@ -405,7 +396,6 @@ public class HierarchicalWalker extends Agent {
 		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
 			if(openList.find_index.containsKey(newtile)){
 				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
-					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
 				}
 			}
@@ -414,7 +404,6 @@ public class HierarchicalWalker extends Agent {
 				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
 					openList.add(bundle);
 					in_closed[newtile]= false;
-					reworkcounter++;
 				}
 			}	
 		}
@@ -450,7 +439,6 @@ public class HierarchicalWalker extends Agent {
 		if(mark[newtile]==1){ // de huidige tegel zijn we al eens tegengekomen		
 			if(openList.find_index.containsKey(newtile)){
 				if(openList.heap.get(openList.find_index.get(newtile)).g_val > (tmp_min.g_val + 4)){
-					reworkcounter++;
 					openList.set(openList.find_index.get(newtile), bundle);
 				}
 			}
@@ -459,7 +447,6 @@ public class HierarchicalWalker extends Agent {
 				if(f_array[newtile] > f_val + 3){ //f-waarden vergelijken
 					openList.add(bundle);
 					in_closed[newtile]= false;
-					reworkcounter++;
 				}
 			}	
 		}
@@ -496,8 +483,6 @@ public class HierarchicalWalker extends Agent {
 		for(int i=0; i<tmp.size(); i++){
 			moves.add(tmp.get(tmp.size()-i-1));
 		}
-		System.out.println(counter);
-		System.out.println("ReworkCounter: "+ reworkcounter);
 		return moves;
     }
 }

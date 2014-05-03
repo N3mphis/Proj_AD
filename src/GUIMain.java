@@ -32,7 +32,7 @@ public class GUIMain {
 			//
 			// You can increase the speed variable or iterations variable if you want
 			
-			
+			/*
 			System.out.println("Starting scenario 1: ");
 			final String map = "simple_map.txt";
 			double speed = 0.2;
@@ -43,9 +43,9 @@ public class GUIMain {
 			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.SIMPLE_SOLVER;
 			GameLogic.PROCESSING_STRATEGY redProcessingStrategy = GameLogic.PROCESSING_STRATEGY.SIMPLE_SOLVER;
 			int iterations = 500;
-			
+			*/
 			// end scenario 1
-		
+			
 			 
 			// Scenario 2: That's not fair
 			// uncomment the following code.
@@ -58,11 +58,11 @@ public class GUIMain {
 			// --  Briefly describe what you did and how it effects the game outcome.
 			//
 			// You can increase the speed variable 
-		/*	
 			
+			/*
 			System.out.println("Starting scenario 2: ");
 			final String map = "not_fair.txt";
-			double speed = 0.0001;
+			double speed = 0.001;
 			int pathCredits= 40; // do not change
 			int calcCredits =30; // do not change
 			GameLogic.AGENT_STRATEGY bluePathStrategy = GameLogic.AGENT_STRATEGY.ASTARWALKER; // do not change
@@ -86,26 +86,25 @@ public class GUIMain {
 			// --  Briefly describe what you did and how it effects the game outcome.
 			//
 			// You can increase the speed variable 
-			/*
 			
+			/*
 			System.out.println("Starting scenario 3: ");
 			final String map = "process_problems.txt";
-			double speed = 0.001;
+			double speed = 0.01;
 			int pathCredits= 10; // do not change
 			int calcCredits =20; // do not change
 			GameLogic.AGENT_STRATEGY bluePathStrategy = GameLogic.AGENT_STRATEGY.ASTARWALKER; // do not change
 			GameLogic.AGENT_STRATEGY redPathStrategy = GameLogic.AGENT_STRATEGY.RANDOM_WALKER; // do not change
 			GameLogic.PROCESSING_STRATEGY redProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER;// do not change
-			
 			int iterations = 1200; // do not change
 			
 			// change this 
 			//GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER; // do not change
 			//GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.ADVANCED_SOLVER; // do not change
 			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.GREEDY_SOLVER;
-			//end scenario 3
-			
+			// end scenario 3
 			*/
+			
 			
 			// Scenario 4  : entrances  (If you implemented hierarchical version)
 			// uncomment the following code.
@@ -122,23 +121,23 @@ public class GUIMain {
 			//
 			// You can increase the speed variable 
 			
-			/*
 			
+			/*
 			System.out.println("Starting scenario 4: ");
 			final String map = "entrance.txt";
-			double speed = 0.1;
+			double speed = 0.01;
 			int pathCredits= 10; // do not change
 			int calcCredits =2000; // do not change
-			GameLogic.AGENT_STRATEGY bluePathStrategy = GameLogic.AGENT_STRATEGY.HIERARCHICALWALKER; // do not change
-			GameLogic.AGENT_STRATEGY redPathStrategy = GameLogic.AGENT_STRATEGY.RANDOM_WALKER; // do not change
-			GameLogic.PROCESSING_STRATEGY redProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER;// do not change
-			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER; // do not change
+			GameLogic.AGENT_STRATEGY bluePathStrategy = GameLogic.AGENT_STRATEGY.HIERARCHICALWALKER;
+			GameLogic.AGENT_STRATEGY redPathStrategy = GameLogic.AGENT_STRATEGY.RANDOM_WALKER;
+			GameLogic.PROCESSING_STRATEGY redProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER;
+			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.DYNAMIC_SOLVER;
 
-			int iterations = 8000; 
-			// end scenario 4
+			int iterations = 9000; 
 			*/
+			// end scenario 4			
 			
-			/*
+			
 			// Scenario 5 OPTIONAL : Creative scenario
 			// Create a nice scenario and describe it briefly in your report. 
 			// You can also use the 'map generator' excel file to create a new map.The game only supports maps of the original size.
@@ -148,16 +147,17 @@ public class GUIMain {
 			// add here
 			
 			final String map = "ownmap.txt";
-			double speed = 0.9;
+			double speed = 0.1;
 			int pathCredits= 25; // can check 25 squares in a single iteration
 			int calcCredits =10000;
 			GameLogic.AGENT_STRATEGY bluePathStrategy = GameLogic.AGENT_STRATEGY.ASTARWALKER;
-			GameLogic.AGENT_STRATEGY redPathStrategy = GameLogic.AGENT_STRATEGY.RANDOM_WALKER;
+			GameLogic.AGENT_STRATEGY redPathStrategy = GameLogic.AGENT_STRATEGY.ASTARWALKER;
 			GameLogic.PROCESSING_STRATEGY blueProcessingStrategy = GameLogic.PROCESSING_STRATEGY.SIMPLE_SOLVER;
-			GameLogic.PROCESSING_STRATEGY redProcessingStrategy = GameLogic.PROCESSING_STRATEGY.SIMPLE_SOLVER;
-			int iterations = 500;
+			GameLogic.PROCESSING_STRATEGY redProcessingStrategy = GameLogic.PROCESSING_STRATEGY.GREEDY_SOLVER;
+			int iterations = 1500;
 			// end scenario 5
-			*/
+			
+		
 			
 			GameLogic logic = new GameLogic(iterations, pathCredits,calcCredits,collectionBlue, collectionRed, gui ,map, speed, bluePathStrategy, redPathStrategy, blueProcessingStrategy,redProcessingStrategy);
 			gui.setLogic (logic);
